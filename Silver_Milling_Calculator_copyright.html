@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Silver Milling Calculator</title>
+<style>
+:root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#202124;background:#f6f6f4}
+body{margin:0;padding:24px}.app{max-width:760px;margin:auto}h1{font-size:28px;margin:0 0 6px}.sub{color:#666;margin:0 0 22px}
+.grid{display:grid;grid-template-columns:1fr;gap:16px}.card{background:#fff;border:1px solid #ddd;border-radius:14px;padding:20px;margin-bottom:16px}
+h2{font-size:18px;margin:0 0 4px}label{display:block;font-size:14px;font-weight:600;margin-top:12px}
+input,select,textarea{font:inherit;box-sizing:border-box;width:100%;padding:10px 11px;margin-top:5px;border:1px solid #bbb;border-radius:8px;background:#fff}
+button{font:inherit;border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:600}.primary{background:#222;color:#fff}.secondary{background:#eee;color:#222}
+.result{background:#f3f3f1;border-radius:10px;padding:14px;margin-top:14px}.big{font-size:32px;font-weight:750;margin-top:3px}
+.row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid #ddd}.row:last-child{border-bottom:0}
+.muted{color:#666;font-size:13px}.note{font-size:12px;color:#777;margin-top:12px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+@media(max-width:600px){body{padding:14px}.grid{grid-template-columns:1fr}h1{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>Silver Milling Calculator</h1>
+<p class="sub">Sterling 925 · milling, melt weight and ring length calculations</p>
+
+<div class="grid">
+<section class="card">
+<h2>Finished strip</h2>
+<p class="muted">Enter the dimensions you want the finished strip to have.</p>
+<label>Desired thickness (mm)<input id="t" type="number" min=".01" step=".01" value="1.60"></label>
+<label>Desired width (mm)<input id="w" type="number" min=".01" step=".01" value="4.40"></label>
+<label>Desired length (mm)<input id="l" type="number" min=".01" step=".1" value="100"></label>
+<label>Student loss allowance (%)<input id="p" type="number" min="0" max="200" step="1" value="30"></label>
+<div class="result">
+<div class="muted">STOP SQUARE MILLING AT</div><div class="big" id="sq">3.47 mm</div>
+<div class="muted" id="sq2">3.47 × 3.47 mm square</div>
+</div>
+<div class="result">
+<div class="row"><span>Theoretical finished weight</span><strong id="fw">7.29 g</strong></div>
+<div class="row"><span>Loss allowance</span><strong id="lw">2.19 g</strong></div>
+<div style="margin-top:10px" class="muted">RECOMMENDED STARTING MELT</div>
+<div class="big" id="mw">9.5 g</div><div class="muted">rounded up to nearest 0.5 g</div>
+</div>
+<p id="err" style="color:#a00;font-size:13px"></p>
+</section>
+
+
+</div>
+
+<div class="grid">
+<section class="card">
+<h2>Length from diameter</h2>
+<p class="muted">Use this when you know the internal diameter and need the circumference, for example when making a bezel setting.</p>
+<label>Diameter (mm)<input id="diam" type="number" min=".01" step=".01" value="18"></label>
+<div class="result"><div class="muted">REQUIRED LENGTH / CIRCUMFERENCE</div><div class="big" id="circ">56.55 mm</div></div>
+<p class="note">This is the basic circumference. Add your own allowance for a joint, overlap or sizing method.</p>
+</section>
+
+<section class="card">
+<h2>Length from ring size</h2>
+<p class="muted">Choose UK or US sizing and enter the ring size. The result is the approximate internal circumference.</p>
+<label>Size system
+<select id="rsys"><option value="UK">UK</option><option value="US">US</option></select></label>
+<label>Ring size<input id="rsize" type="text" value="L" placeholder="e.g. L or 6"></label>
+<label>Silver thickness (mm)<input id="rthick" type="number" min="0" step=".01" value="1.60"></label>
+<label>Join / sizing allowance (mm)<input id="rallow" type="number" min="-20" max="20" step=".1" value="0"></label>
+<div class="result">
+<div class="row"><span>Standard internal diameter</span><strong id="rd">20.59 mm</strong></div>
+<div class="row"><span>Standard internal circumference</span><strong id="rc">64.70 mm</strong></div>
+<div class="row"><span>Starting cut length</span><strong id="rlen">64.70 mm</strong></div>
+<div id="rerr" style="color:#a00;font-size:13px;margin-top:8px"></div>
+</div>
+<p class="note">The ring size describes the INSIDE of the finished ring. Silver thickness therefore matters: the strip length follows the centre line, so approximately π × thickness is added to the internal circumference. Your join/sizing allowance is then added on top. This is a starting calculation; your exact forming method may require a different allowance.</p>
+</section>
+</div>
+
+<section class="card">
+<h2>The maths</h2>
+<p class="muted"><strong>Square size:</strong> (desired width + half desired thickness) ÷ 1.5.</p>
+<p class="muted"><strong>Finished weight:</strong> thickness × width × length × 10.36 ÷ 1,000.</p>
+<p class="muted"><strong>Starting melt:</strong> finished weight × (1 + loss allowance), rounded up to the nearest 0.5 g.</p>
+<p class="muted"><strong>Circumference:</strong> diameter × π.</p>
+<p class="muted"><strong>Ring size:</strong> centre-line circumference = internal circumference + (π × silver thickness), then the join/sizing allowance is added.</p>
+<p class="note">Density used: 10.36 g/cm³ for sterling 925. The 30% loss allowance is deliberately conservative for student use and can be changed.</p>
+</section>
+</div>
+
+<script>
+(()=> {
+const $=id=>document.getElementById(id);
+function calc(){
+ const T=+$('t').value,W=+$('w').value,L=+$('l').value,P=+$('p').value;
+ if(![T,W,L,P].every(Number.isFinite)||T<=0||W<=0||L<=0||P<0){$('err').textContent='Please enter positive dimensions and a loss allowance of 0% or more.';return}
+ $('err').textContent='';
+ const S=(W+T/2)/1.5,F=T*W*L*10.36/1000,A=F*P/100,M=Math.ceil((F+A)*2-1e-9)/2;
+ $('sq').textContent=S.toFixed(2)+' mm';$('sq2').textContent=S.toFixed(2)+' × '+S.toFixed(2)+' mm square';
+ $('fw').textContent=F.toFixed(2)+' g';$('lw').textContent=A.toFixed(2)+' g';$('mw').textContent=M.toFixed(1)+' g';$('cp').textContent=P.toFixed(0)+'%';
+}
+
+function circumference(){
+ const d=+$('diam').value;$('circ').textContent=Number.isFinite(d)&&d>0?(Math.PI*d).toFixed(2)+' mm':'—';
+}
+const UK={
+'A':37.0,'A 1/2':38.3,'B':39.6,'B 1/2':40.8,'C':42.1,'C 1/2':43.4,'D':44.6,'D 1/2':45.9,
+'E':47.1,'E 1/2':48.4,'F':49.6,'F 1/2':50.9,'G':52.1,'G 1/2':53.4,'H':54.7,'H 1/2':55.9,
+'I':57.2,'I 1/2':58.4,'J':59.7,'J 1/2':61.0,'K':62.2,'K 1/2':63.5,'L':64.7,'L 1/2':66.0,
+'M':67.2,'M 1/2':68.5,'N':69.7,'N 1/2':71.0,'O':72.3,'O 1/2':73.5,'P':74.8,'P 1/2':76.0,
+'Q':77.3,'Q 1/2':78.5,'R':79.8,'R 1/2':81.0,'S':82.3,'S 1/2':83.6,'T':84.8,'T 1/2':86.1,
+'U':87.3,'U 1/2':88.6,'V':89.8,'V 1/2':91.1,'W':92.3,'W 1/2':93.6,'X':94.8,'X 1/2':96.1,
+'Y':97.4,'Y 1/2':98.6,'Z':99.9,'Z 1/2':101.1
+};
+const US={
+'0':39.3,'0.5':40.5,'1':41.9,'1.5':43.1,'2':44.2,'2.5':45.5,'3':46.8,'3.5':48.0,
+'4':49.2,'4.5':50.5,'5':51.8,'5.5':53.1,'6':54.4,'6.5':55.7,'7':57.0,'7.5':58.3,
+'8':59.5,'8.5':60.8,'9':62.1,'9.5':63.4,'10':64.6,'10.5':65.9,'11':67.2,'11.5':68.5,
+'12':69.7,'12.5':71.0,'13':72.3,'13.5':73.6,'14':74.8,'14.5':76.1,'15':77.4
+};
+function ringSize(){
+ const sys=$('rsys').value,key=$('rsize').value.trim().toUpperCase(),c=(sys==='UK'?UK:US)[key];
+ const thickness=+$('rthick').value,allowance=+$('rallow').value;
+ if(c===undefined){
+  $('rd').textContent='—';$('rc').textContent='—';$('rlen').textContent='—';
+  $('rerr').textContent='Enter a valid '+sys+' ring size.';return;
+ }
+ if(!Number.isFinite(thickness)||thickness<0||!Number.isFinite(allowance)){
+  $('rd').textContent=(c/Math.PI).toFixed(2)+' mm';$('rc').textContent=c.toFixed(2)+' mm';$('rlen').textContent='—';
+  $('rerr').textContent='Enter a valid thickness and allowance.';return;
+ }
+ $('rerr').textContent='';
+ $('rc').textContent=c.toFixed(2)+' mm';
+ $('rd').textContent=(c/Math.PI).toFixed(2)+' mm';
+ // Ring size is the INSIDE circumference. For strip of radial thickness T,
+ // the neutral/centre-line circumference is approximately inside circumference + πT.
+ // Then add the user's explicit joining/sizing allowance.
+ const centrelineLength=c+(Math.PI*thickness);
+ $('rlen').textContent=Math.max(0,centrelineLength+allowance).toFixed(2)+' mm';
+}
+['t','w','l','p'].forEach(id=>$(id).addEventListener('input',calc));
+$('diam').addEventListener('input',circumference);
+['rsys','rsize','rthick','rallow'].forEach(id=>$(id).addEventListener('input',ringSize));
+$('clear').addEventListener('click',()=>{$('am').value='';$('af').value='';$('notes').value='';actual()});
+calc();circumference();ringSize();
+})();
+</script>
+
+  <footer class="copyright">
+    © 2026 Isobel Petty — Silver Mill<br>
+    <span>For personal use. All rights reserved.</span>
+  </footer>
+  <style>
+    .copyright {
+      text-align: center;
+      padding: 22px 16px 28px;
+      color: #6b7280;
+      font-size: 0.78rem;
+      line-height: 1.6;
+    }
+    .copyright span { font-size: 0.72rem; }
+  </style>
+
+</body>
+</html>
