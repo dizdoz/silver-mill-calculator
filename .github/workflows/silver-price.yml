@@ -34,11 +34,7 @@ jobs:
           })
           url = "https://api.metals.dev/v1/latest?" + params
 
-          req = urllib.request.Request(
-              url,
-              headers={"Accept": "application/json"}
-          )
-
+          req = urllib.request.Request(url, headers={"Accept": "application/json"})
           with urllib.request.urlopen(req, timeout=30) as response:
               data = json.load(response)
 
@@ -49,15 +45,31 @@ jobs:
           if not isinstance(silver, (int, float)):
               raise SystemExit("Silver price missing from response")
 
-          timestamp = data.get("timestamp") or datetime.now(timezone.utc).isoformat()
+          now = datetime.now(timezone.utc).isoformat()
+          timestamp = data.get("timestamp") or now
+          sterling = round(float(silver) * 0.925, 6)
+
+          history = []
+          try:
+              with open("silver-price.json", encoding="utf-8") as f:
+                  old = json.load(f)
+                  history = old.get("history", [])
+          except (FileNotFoundError, json.JSONDecodeError):
+              pass
+
+          history.append({
+              "timestamp": timestamp,
+              "price_gbp_per_gram": sterling
+          })
+          history = history[-180:]
 
           payload = {
               "metal": "sterling_silver_925",
-              "market_price_gbp_per_gram": round(float(silver) * 0.925, 6),
-              "fine_silver_market_price_gbp_per_gram": round(float(silver), 6),
+              "market_price_gbp_per_gram": sterling,
               "source": "Metals.Dev",
               "source_timestamp": timestamp,
-              "published_at": datetime.now(timezone.utc).isoformat()
+              "published_at": now,
+              "history": history
           }
 
           with open("silver-price.json", "w", encoding="utf-8") as f:
