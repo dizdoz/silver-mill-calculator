@@ -22,7 +22,7 @@ button{font:inherit;border:0;border-radius:8px;padding:10px 14px;cursor:pointer;
 @media(max-width:600px){body{padding:14px}.grid{grid-template-columns:1fr}h1{font-size:24px}}
 
 .silver-price{border:1px solid #cfd3d6}.price-status{display:flex;justify-content:space-between;gap:10px;align-items:center}.price-value{font-size:34px;font-weight:750;margin:6px 0}.chart-wrap{margin-top:14px;overflow:hidden}.chart{width:100%;height:180px;display:block;background:#f7f7f5;border-radius:10px}.vat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.small-button{padding:8px 10px;font-size:13px}@media(max-width:600px){.vat-grid{grid-template-columns:1fr}}
-</style>
+.tabs{display:flex;gap:6px;overflow-x:auto;margin:0 0 16px;padding:4px;background:#e9e9e6;border-radius:12px;position:sticky;top:8px;z-index:10}.tab{flex:1;min-width:110px;background:transparent;color:#555;padding:10px 12px;border-radius:9px;white-space:nowrap}.tab.active{background:#fff;color:#202124;box-shadow:0 1px 4px rgba(0,0,0,.10)}.tab-panel{display:none}.tab-panel.active{display:block}@media(max-width:600px){.tabs{top:4px}.tab{min-width:0;font-size:13px;padding:10px 8px}}</style>
 </head>
 
 <body>
@@ -30,10 +30,10 @@ button{font:inherit;border:0;border-radius:8px;padding:10px 14px;cursor:pointer;
 <div class="app">
 
 <h1>Silver Milling Calculator</h1>
-<p class="sub">Sterling 925 · milling, melt weight and ring length calculations</p>
+<p class="sub">Sterling 925 · milling, melt weight and ring length calculations</p><nav class="tabs" aria-label="Calculator sections"><button class="tab active" data-tab="strip">Strip &amp; Sheet</button><button class="tab" data-tab="circular">Circular / Bezel</button><button class="tab" data-tab="ring">Ring</button><button class="tab" data-tab="market">Market Price</button></nav>
 
 
-<section class="card silver-price">
+<div class="tab-panel" id="tab-market"><section class="card silver-price">
 <h2>Sterling silver market price</h2>
 <p class="muted">Sterling 925 market price · GBP per gram · Metals.Dev market data</p>
 <div class="result">
@@ -61,10 +61,7 @@ button{font:inherit;border:0;border-radius:8px;padding:10px 14px;cursor:pointer;
 </div>
 </section>
 
-<div class="grid">
-
-<section class="card">
-<h2>Finished strip</h2>
+</section></div><div class="tab-panel active" id="tab-strip"><section class="card"><h2>Finished strip</h2>
 <p class="muted">Enter the dimensions you want the finished strip to have.</p>
 
 <label>
@@ -114,14 +111,7 @@ RECOMMENDED STARTING MELT
 
 <p id="err" style="color:#a00;font-size:13px"></p>
 
-</section>
-</div>
-
-
-<div class="grid">
-
-<section class="card">
-<h2>Length from diameter</h2>
+</section></div></div><div class="tab-panel" id="tab-circular"><section class="card"><h2>Length from diameter</h2>
 
 <p class="muted">
 Use this when you know the internal diameter and need the circumference,
@@ -143,12 +133,7 @@ This is the basic circumference. Add your own allowance for a joint,
 overlap or sizing method.
 </p>
 
-</section>
-
-
-<section class="card">
-
-<h2>Length from ring size</h2>
+</section></div><div class="tab-panel" id="tab-ring"><section class="card"><h2>Length from ring size</h2>
 
 <p class="muted">
 Choose UK or US sizing and enter the ring size.
@@ -207,14 +192,7 @@ Your join/sizing allowance is then added on top. This is a starting calculation;
 your exact forming method may require a different allowance.
 </p>
 
-</section>
-
-</div>
-
-
-<section class="card">
-
-<h2>The maths</h2>
+</section></div><div class="maths-in-strip"><section class="card"><h2>The maths</h2>
 
 <p class="muted">
 <strong>Square size:</strong>
@@ -288,6 +266,7 @@ function calc(){
  $('fw').textContent=F.toFixed(2)+' g';
  $('lw').textContent=A.toFixed(2)+' g';
  $('mw').textContent=M.toFixed(1)+' g';
+ updateMarketValue();
 
 }
 
@@ -394,6 +373,13 @@ $('diam').addEventListener(
 ['rsys','rsize','rthick','rallow'].forEach(id=>
  $(id).addEventListener('input',ringSize)
 );
+
+function formatPriceDate(iso){if(!iso)return '—';const d=new Date(iso);return Number.isNaN(d.getTime())?'—':d.toLocaleString([],{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});}
+function updateMarketValue(){const price=window.silverMarketPrice,melt=+$('mw').textContent.replace(/[^0-9.]/g,''),vat=+$('vatRate').value;if(Number.isFinite(price)&&Number.isFinite(melt)){const value=price*melt;const v=value*(Number.isFinite(vat)?vat:0)/100;$('priceMeltWeight').textContent=melt.toFixed(1)+' g';$('marketValue').textContent='£'+value.toFixed(2);$('vatValue').textContent='£'+v.toFixed(2);$('marketValueVat').textContent='£'+(value+v).toFixed(2);}}
+function drawPriceChart(history){const c=$('priceChart');if(!c||!history||!history.length)return;const x=c.getContext('2d'),dpr=devicePixelRatio||1,w=c.clientWidth||600,h=180;c.width=w*dpr;c.height=h*dpr;x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,w,h);const a=history.map(v=>+v.price_gbp_per_gram).filter(Number.isFinite);if(!a.length)return;const min=Math.min(...a),max=Math.max(...a),pad=24,range=(max-min)||.01;x.beginPath();a.forEach((v,i)=>{const px=pad+(i/Math.max(1,a.length-1))*(w-pad*2),py=h-pad-(v-min)/range*(h-pad*2);i?x.lineTo(px,py):x.moveTo(px,py);});x.strokeStyle='#222';x.lineWidth=2;x.stroke();x.font='12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';x.fillStyle='#666';x.fillText('£'+max.toFixed(2),4,16);x.fillText('£'+min.toFixed(2),4,h-6);}
+async function loadSilverPrice(){try{const r=await fetch('./silver-price.json?'+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;const d=await r.json(),p=+d.market_price_gbp_per_gram;if(!Number.isFinite(p))throw 0;window.silverMarketPrice=p;$('silverPrice').textContent='£'+p.toFixed(4)+' / g';$('priceUpdated').textContent='Market price updated '+formatPriceDate(d.source_timestamp);$('priceAge').textContent='Published '+formatPriceDate(d.published_at);updateMarketValue();drawPriceChart(d.history||[]);}catch(e){$('silverPrice').textContent='—';$('priceUpdated').textContent='Market price unavailable';$('priceAge').textContent='—';}}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');const p=$('tab-'+b.dataset.tab);if(p)p.classList.add('active');}));
+$('refreshPrice').addEventListener('click',loadSilverPrice);$('vatRate').addEventListener('input',updateMarketValue);
 
 calc();
 circumference();
