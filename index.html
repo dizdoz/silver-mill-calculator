@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#202124">
 <meta name="author" content="Isobel Petty">
 <meta name="copyright" content="© 2026 Isobel Petty — Silver Mill">
 <!-- Pages deployment trigger: 2026-09-28 -->
@@ -366,6 +368,14 @@ ringSize();
 loadSilverPrice();
 
 })();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
 </script>
 
 </body>
