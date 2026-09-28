@@ -20,6 +20,8 @@ button{font:inherit;border:0;border-radius:8px;padding:10px 14px;cursor:pointer;
 .copyright{text-align:center;padding:22px 16px 28px;color:#6b7280;font-size:.78rem;line-height:1.6}
 .copyright span{font-size:.72rem}
 @media(max-width:600px){body{padding:14px}.grid{grid-template-columns:1fr}h1{font-size:24px}}
+
+.silver-price{border:1px solid #cfd3d6}.price-status{display:flex;justify-content:space-between;gap:10px;align-items:center}.price-value{font-size:34px;font-weight:750;margin:6px 0}.chart-wrap{margin-top:14px;overflow:hidden}.chart{width:100%;height:180px;display:block;background:#f7f7f5;border-radius:10px}.vat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.small-button{padding:8px 10px;font-size:13px}@media(max-width:600px){.vat-grid{grid-template-columns:1fr}}
 </style>
 </head>
 
@@ -29,6 +31,35 @@ button{font:inherit;border:0;border-radius:8px;padding:10px 14px;cursor:pointer;
 
 <h1>Silver Milling Calculator</h1>
 <p class="sub">Sterling 925 · milling, melt weight and ring length calculations</p>
+
+
+<section class="card silver-price">
+<h2>Sterling silver market price</h2>
+<p class="muted">Sterling 925 market price · GBP per gram · Metals.Dev market data</p>
+<div class="result">
+<div class="price-status"><span class="muted">CURRENT MARKET PRICE</span><span class="muted" id="priceAge">—</span></div>
+<div class="price-value" id="silverPrice">—</div>
+<div class="muted" id="priceUpdated">Market price not yet available</div>
+</div>
+<div class="actions">
+<button class="primary small-button" id="refreshPrice">Refresh market price</button>
+</div>
+<div class="result">
+<div class="row"><span>Starting melt</span><strong id="priceMeltWeight">9.5 g</strong></div>
+<div class="row"><span>Estimated market value</span><strong id="marketValue">—</strong></div>
+<div class="vat-grid" style="margin-top:12px">
+<label>VAT (%)<input id="vatRate" type="number" min="0" max="100" step="0.1" value="20"></label>
+<div></div>
+</div>
+<div class="row"><span>VAT on market value</span><strong id="vatValue">—</strong></div>
+<div class="row"><span>Estimated market value incl. VAT</span><strong id="marketValueVat">—</strong></div>
+</div>
+<p class="note">All figures in this section are market-price estimates, not retail or supplier prices. Sterling price is calculated as 92.5% of the fine-silver market price. VAT is shown separately.</p>
+<div class="chart-wrap">
+<div class="muted" style="margin:12px 0 6px">STERLING SILVER MARKET PRICE HISTORY (£/g)</div>
+<canvas class="chart" id="priceChart" height="180"></canvas>
+</div>
+</section>
 
 <div class="grid">
 
@@ -367,6 +398,7 @@ $('diam').addEventListener(
 calc();
 circumference();
 ringSize();
+loadSilverPrice();
 
 })();
 </script>
