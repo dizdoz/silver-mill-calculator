@@ -3,7 +3,7 @@ name: Update silver market price
 on:
   workflow_dispatch:
   schedule:
-    - cron: "15 9,15,21 * * *"
+    - cron: "15 9 * * *"
 
 permissions:
   contents: write
@@ -47,6 +47,7 @@ jobs:
 
           now = datetime.now(timezone.utc).isoformat()
           timestamp = data.get("timestamp") or now
+          pulled_at = now
           sterling = round(float(silver) * 0.925, 6)
 
           history = []
@@ -69,6 +70,7 @@ jobs:
               "source": "Metals.Dev",
               "source_timestamp": timestamp,
               "published_at": now,
+              "pulled_at": pulled_at,
               "history": history
           }
 
