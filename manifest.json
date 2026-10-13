@@ -1,10 +1,10 @@
 {
-  "name":"Silver Mill Calculator",
-  "short_name":"Silver Mill",
+  "name":"Metal Maths",
+  "short_name":"Metal Maths",
   "start_url":"./",
   "display":"standalone",
-  "background_color":"#f5f5f3",
-  "theme_color":"#202124",
+  "background_color":"#F6F5F0",
+  "theme_color":"#F6F5F0",
   "description":"Calculators for silver milling, melt weight, bezel circumference and ring lengths.",
   "icons":[
     {"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
