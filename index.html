@@ -4,28 +4,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#202124">
+<meta name="theme-color" content="#F6F5F0" id="themeColorMeta">
 <meta name="author" content="Isobel Petty">
 <meta name="copyright" content="© 2026 Isobel Petty — Silver Mill">
 <!-- Pages deployment trigger: 2026-09-28 -->
 <title>Silver Milling Calculator</title>
 
 <style>
-:root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#202124;background:#f6f6f4}
-body{margin:0;padding:24px}.app{max-width:760px;margin:auto}h1{font-size:28px;margin:0 0 6px}.sub{color:#666;margin:0 0 22px}
-.grid{display:grid;grid-template-columns:1fr;gap:16px}.card{background:#fff;border:1px solid #ddd;border-radius:14px;padding:20px;margin-bottom:16px}
-h2{font-size:18px;margin:0 0 4px}label{display:block;font-size:14px;font-weight:600;margin-top:12px}
-input,select,textarea{font:inherit;box-sizing:border-box;width:100%;padding:10px 11px;margin-top:5px;border:1px solid #bbb;border-radius:8px;background:#fff}
-button{font:inherit;border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:600}.primary{background:#222;color:#fff}.secondary{background:#eee;color:#222}
-.result{background:#f3f3f1;border-radius:10px;padding:14px;margin-top:14px}.big{font-size:32px;font-weight:750;margin-top:3px}
-.row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid #ddd}.row:last-child{border-bottom:0}
-.muted{color:#666;font-size:13px}.note{font-size:12px;color:#777;margin-top:12px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
-.copyright{text-align:center;padding:22px 16px 28px;color:#6b7280;font-size:.78rem;line-height:1.6}
-.copyright span{font-size:.72rem}
-@media(max-width:600px){body{padding:14px}.grid{grid-template-columns:1fr}h1{font-size:24px}}
-
-.silver-price{border:1px solid #cfd3d6}.price-status{display:flex;justify-content:space-between;gap:10px;align-items:center}.price-value{font-size:34px;font-weight:750;margin:6px 0}.chart-wrap{margin-top:14px;overflow:hidden}.chart{width:100%;height:180px;display:block;background:#f7f7f5;border-radius:10px}.vat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.small-button{padding:8px 10px;font-size:13px}@media(max-width:600px){.vat-grid{grid-template-columns:1fr}}
-.tabs{display:flex;gap:6px;overflow-x:auto;margin:0 0 16px;padding:4px;background:#e9e9e6;border-radius:12px;position:sticky;top:8px;z-index:10}.tab{flex:1;min-width:110px;background:transparent;color:#555;padding:10px 12px;border-radius:9px;white-space:nowrap}.tab.active{background:#fff;color:#202124;box-shadow:0 1px 4px rgba(0,0,0,.10)}.tab-panel{display:none}.tab-panel.active{display:block}@media(max-width:600px){.tabs{top:4px}.tab{min-width:0;font-size:13px;padding:10px 8px}}.tab-content{max-width:760px;margin:0 auto}.maths-in-strip{display:none}
+:root{color-scheme:light;--page:#F6F5F0;--surface:#FFFFFF;--text:#1F2A27;--muted:#5A6862;--border:#DDE3DA;--border-strong:#7E8F86;--accent:#2F6F66;--accent-hover:#2A6A61;--accent-text:#FFFFFF;--soft:#CFDACB;--soft-2:#BFD9D3;--result:#EEF2EB;--chart:#F6F5F0;--danger:#A32929;--focus:#2F6F66;--shadow:rgba(31,42,39,.12);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);background:var(--page)}
+:root[data-theme="dark"]{color-scheme:dark;--page:#121A18;--surface:#1B2623;--text:#F6F5F0;--muted:#BFD9D3;--border:#2D3B37;--border-strong:#62786E;--accent:#8CC5B8;--accent-hover:#BFD9D3;--accent-text:#121A18;--soft:#2D3B37;--soft-2:#4E6E63;--result:#202E29;--chart:#1B2623;--danger:#FFB4AB;--focus:#8CC5B8;--shadow:rgba(0,0,0,.28)}
+*{box-sizing:border-box}body{margin:0;padding:24px;background:var(--page);color:var(--text);transition:background .15s,color .15s}.app{max-width:760px;margin:auto}.topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:22px}.brand{min-width:0}h1{font-size:28px;margin:0 0 6px;line-height:1.2}.sub{color:var(--muted);margin:0}.theme-toggle{flex-shrink:0;background:var(--surface);color:var(--text);border:1px solid var(--border-strong);padding:9px 12px;min-height:42px}.theme-toggle:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.grid{display:grid;grid-template-columns:1fr;gap:16px}.card{background:var(--surface);border:1px solid var(--border-strong);border-radius:14px;padding:20px;margin-bottom:16px}h2{font-size:18px;margin:0 0 4px}label{display:block;font-size:14px;font-weight:600;margin-top:12px;color:var(--text)}input,select,textarea{font:inherit;box-sizing:border-box;width:100%;padding:10px 11px;margin-top:5px;border:1px solid var(--border-strong);border-radius:8px;background:var(--surface);color:var(--text)}input::placeholder{color:var(--muted)}button{font:inherit;border:1px solid transparent;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:600}.primary{background:var(--accent);color:var(--accent-text)}.primary:hover{background:var(--accent-hover)}.secondary{background:var(--soft);color:var(--text);border-color:var(--border-strong)}
+.result{background:var(--result);border-radius:10px;padding:14px;margin-top:14px}.big{font-size:32px;font-weight:750;margin-top:3px}.row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--border)}.row:last-child{border-bottom:0}.muted{color:var(--muted);font-size:13px}.note{font-size:12px;color:var(--muted);margin-top:12px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.copyright{text-align:center;padding:22px 16px 28px;color:var(--muted);font-size:.78rem;line-height:1.6}.copyright span{font-size:.72rem}
+@media(max-width:600px){body{padding:14px}.grid{grid-template-columns:1fr}h1{font-size:24px}.topbar{gap:8px}.theme-toggle{padding:8px 10px;font-size:13px}}
+.silver-price{border:1px solid var(--border-strong)}.price-status{display:flex;justify-content:space-between;gap:10px;align-items:center}.price-value{font-size:34px;font-weight:750;margin:6px 0}.chart-wrap{margin-top:14px;overflow:hidden}.chart{width:100%;height:180px;display:block;background:var(--chart);border-radius:10px}.vat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.small-button{padding:8px 10px;font-size:13px}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin:0 0 16px;padding:4px;background:var(--soft);border:1px solid var(--border);border-radius:12px;position:sticky;top:8px;z-index:10}.tab{flex:1;min-width:110px;background:transparent;color:var(--text);padding:10px 12px;border-radius:9px;white-space:nowrap}.tab.active{background:var(--surface);color:var(--text);box-shadow:0 1px 4px var(--shadow);border-color:var(--border-strong)}.tab-panel{display:none}.tab-panel.active{display:block}.tab-content{max-width:760px;margin:0 auto}.maths-in-strip{display:none}.error{color:var(--danger)!important}
+@media(max-width:600px){.tabs{top:4px}.tab{min-width:0;font-size:13px;padding:10px 8px}.vat-grid{grid-template-columns:1fr}}
 </style>
 </head>
 
@@ -33,8 +27,9 @@ button{font:inherit;border:0;border-radius:8px;padding:10px 14px;cursor:pointer;
 
 <div class="app">
 
-<h1>Silver Milling Calculator</h1>
-<p class="sub">Sterling 925 · milling, melt weight and ring length calculations</p><nav class="tabs" aria-label="Calculator sections"><button class="tab active" data-tab="strip">Strip &amp; Sheet</button><button class="tab" data-tab="circular">Circular Bezel</button><button class="tab" data-tab="ring">Ring</button><button class="tab" data-tab="market">Market Price</button></nav>
+<div class="topbar"><div class="brand"><h1>Silver Milling Calculator</h1>
+<p class="sub">Sterling 925 · milling, melt weight and ring length calculations</p></div>
+<button type="button" class="theme-toggle" id="themeToggle" aria-label="Switch to dark mode" aria-pressed="false">🌙 Dark</button></div><nav class="tabs" aria-label="Calculator sections"><button class="tab active" data-tab="strip">Strip &amp; Sheet</button><button class="tab" data-tab="circular">Circular Bezel</button><button class="tab" data-tab="ring">Ring</button><button class="tab" data-tab="market">Market Price</button></nav>
 
 <div class="tab-panel active" id="tab-strip"><div class="tab-content">
 <section class="card"><h2>Finished strip</h2>
@@ -85,7 +80,7 @@ RECOMMENDED STARTING MELT
 <div class="muted">rounded up to nearest 0.5 g</div>
 </div>
 
-<p id="err" style="color:#a00;font-size:13px"></p>
+<p id="err" class="error" style="font-size:13px"></p>
 
 </section></div>
 </div></div>
@@ -158,7 +153,7 @@ Join / sizing allowance (mm)
 <strong id="rlen">69.73 mm</strong>
 </div>
 
-<div id="rerr" style="color:#a00;font-size:13px;margin-top:8px"></div>
+<div id="rerr" class="error" style="font-size:13px;margin-top:8px"></div>
 
 </div>
 
@@ -216,6 +211,10 @@ your exact forming method may require a different allowance.
 (()=> {
 
 const $=id=>document.getElementById(id);
+const themeToggle=$('themeToggle');
+function applyTheme(theme){const dark=theme==='dark';document.documentElement.dataset.theme=dark?'dark':'light';themeToggle.textContent=dark?'☀️ Light':'🌙 Dark';themeToggle.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');themeToggle.setAttribute('aria-pressed',String(dark));$('themeColorMeta').setAttribute('content',dark?'#121A18':'#F6F5F0');try{localStorage.setItem('silver-mill-theme',dark?'dark':'light')}catch(e){}if(window.priceHistoryForChart)drawPriceChart(window.priceHistoryForChart);}
+let savedTheme='light';try{savedTheme=localStorage.getItem('silver-mill-theme')||'light'}catch(e){}applyTheme(savedTheme);
+themeToggle.addEventListener('click',()=>applyTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
 
 function calc(){
 
@@ -352,7 +351,7 @@ $('diam').addEventListener(
 
 function formatPriceDate(iso){if(!iso)return '—';const d=new Date(iso);return Number.isNaN(d.getTime())?'—':d.toLocaleString([],{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});}
 function updateMarketValue(){const price=window.silverMarketPrice,melt=+$('marketWeight').value,vat=+$('vatRate').value;if(Number.isFinite(price)&&Number.isFinite(melt)){const value=price*melt;const v=value*(Number.isFinite(vat)?vat:0)/100;$('marketValue').textContent='£'+value.toFixed(2);$('vatValue').textContent='£'+v.toFixed(2);$('marketValueVat').textContent='£'+(value+v).toFixed(2);}}
-function drawPriceChart(history){const c=$('priceChart');if(!c||!history||!history.length)return;const x=c.getContext('2d'),dpr=devicePixelRatio||1,w=c.clientWidth||600,h=180;c.width=w*dpr;c.height=h*dpr;x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,w,h);const a=history.map(v=>+v.price_gbp_per_gram).filter(Number.isFinite);if(!a.length)return;const min=Math.min(...a),max=Math.max(...a),pad=24,range=(max-min)||.01;x.beginPath();a.forEach((v,i)=>{const px=pad+(i/Math.max(1,a.length-1))*(w-pad*2),py=h-pad-(v-min)/range*(h-pad*2);i?x.lineTo(px,py):x.moveTo(px,py);});x.strokeStyle='#222';x.lineWidth=2;x.stroke();x.font='12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';x.fillStyle='#666';x.fillText('£'+max.toFixed(2),4,16);x.fillText('£'+min.toFixed(2),4,h-6);}
+function drawPriceChart(history){window.priceHistoryForChart=history;const c=$('priceChart');if(!c||!history||!history.length)return;const x=c.getContext('2d'),dpr=devicePixelRatio||1,w=c.clientWidth||600,h=180;c.width=w*dpr;c.height=h*dpr;x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,w,h);const a=history.map(v=>+v.price_gbp_per_gram).filter(Number.isFinite);if(!a.length)return;const min=Math.min(...a),max=Math.max(...a),pad=24,range=(max-min)||.01;x.beginPath();a.forEach((v,i)=>{const px=pad+(i/Math.max(1,a.length-1))*(w-pad*2),py=h-pad-(v-min)/range*(h-pad*2);i?x.lineTo(px,py):x.moveTo(px,py);});x.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();x.lineWidth=2;x.stroke();x.font='12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';x.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--muted').trim();x.fillText('£'+max.toFixed(2),4,16);x.fillText('£'+min.toFixed(2),4,h-6);}
 async function loadSilverPrice(){try{const url=new URL('silver-price.json',document.baseURI);url.searchParams.set('_',Date.now());const r=await fetch(url.toString(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json(),p=+d.market_price_gbp_per_gram;if(!Number.isFinite(p))throw new Error('Invalid price');window.silverMarketPrice=p;$('silverPrice').textContent='£'+p.toFixed(4)+' / g';$('priceUpdated').textContent='Pulled from Metals.Dev '+formatPriceDate(d.pulled_at||d.published_at||d.source_timestamp);$('priceAge').textContent='Market data timestamp '+formatPriceDate(d.source_timestamp);updateMarketValue();drawPriceChart(d.history||[]);}catch(e){$('silverPrice').textContent='—';$('priceUpdated').textContent='Market price unavailable';$('priceAge').textContent='Fetch failed — try Refresh';$('marketValue').textContent='—';$('vatValue').textContent='—';$('marketValueVat').textContent='—';}}
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');const p=$('tab-'+b.dataset.tab);if(p)p.classList.add('active');}));
 $('refreshPrice').addEventListener('click',loadSilverPrice);$('vatRate').addEventListener('input',updateMarketValue);$('marketWeight').addEventListener('input',updateMarketValue);
