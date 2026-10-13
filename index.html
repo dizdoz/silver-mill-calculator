@@ -52,7 +52,7 @@ Desired length (mm)
 </label>
 
 <label>
-Student loss allowance (%)
+Loss allowance (%)
 <input id="p" type="number" min="0" max="200" step="1" value="30">
 </label>
 
@@ -90,8 +90,7 @@ RECOMMENDED STARTING MELT
 <section class="card"><h2>Length from diameter</h2>
 
 <p class="muted">
-Use this when you know the internal diameter and need the circumference,
-for example when making a bezel setting.
+Calculate the length of strip needed for a circular bezel from its internal diameter.
 </p>
 
 <label>
@@ -99,15 +98,17 @@ Diameter (mm)
 <input id="diam" type="number" min=".01" step=".01" value="18">
 </label>
 
+<label>
+Join / sizing allowance (mm)
+<input id="bezelallow" type="number" min="-20" max="20" step=".1" value="0">
+</label>
+
 <div class="result">
 <div class="muted">REQUIRED LENGTH / CIRCUMFERENCE</div>
 <div class="big" id="circ">56.55 mm</div>
+<div class="row"><span>Join / sizing allowance</span><strong id="bezelallowout">0.00 mm</strong></div>
+<div class="row"><span>Final strip length</span><strong id="bezellen">56.55 mm</strong></div>
 </div>
-
-<p class="note">
-This is the basic circumference. Add your own allowance for a joint,
-overlap or sizing method.
-</p>
 
 </section></div>
 </div></div>
@@ -115,16 +116,9 @@ overlap or sizing method.
 <div class="tab-panel" id="tab-ring"><div class="tab-content">
 <section class="card"><h2>Length from ring size</h2>
 
-<p class="muted">
-Choose UK or US sizing and enter the ring size.
-The result is the approximate internal circumference.
-</p>
-
-<p class="muted" style="margin-top:12px">UK ring sizing · Cooksongold</p>
-
 <label>
-Ring size
-<input id="rsize" type="text" value="L" placeholder="e.g. L or 6">
+Ring size (UK)
+<input id="rsize" type="text" value="L" placeholder="e.g. L">
 </label>
 
 <label>
@@ -162,8 +156,7 @@ Join / sizing allowance (mm)
 The ring size describes the INSIDE of the finished ring.
 Silver thickness therefore matters: the strip length follows the centre
 line, so approximately π × thickness is added to the internal circumference.
-Your join/sizing allowance is then added on top. This is a starting calculation;
-your exact forming method may require a different allowance.
+Your join/sizing allowance is then added on top. UK sizes and circumferences are based on the Cooksongold ring-sizing chart. This is a starting calculation; your exact forming method may require a different allowance.
 </p>
 
 </section></div>
@@ -247,14 +240,12 @@ function calc(){
 
 
 function circumference(){
-
- const d=+$('diam').value;
-
- $('circ').textContent=
-   Number.isFinite(d)&&d>0
-   ? (Math.PI*d).toFixed(2)+' mm'
-   : '—';
-
+ const d=+$('diam').value, allowance=+$('bezelallow').value;
+ const valid=Number.isFinite(d)&&d>0&&Number.isFinite(allowance);
+ const c=valid?Math.PI*d:NaN;
+ $('circ').textContent=Number.isFinite(c)?c.toFixed(2)+' mm':'—';
+ $('bezelallowout').textContent=Number.isFinite(allowance)?allowance.toFixed(2)+' mm':'—';
+ $('bezellen').textContent=valid?Math.max(0,c+allowance).toFixed(2)+' mm':'—';
 }
 
 
@@ -341,10 +332,7 @@ function ringSize(){
  $(id).addEventListener('input',calc)
 );
 
-$('diam').addEventListener(
- 'input',
- circumference
-);
+['diam','bezelallow'].forEach(id=>$ (id).addEventListener('input',circumference));
 
 ['rsize','rthick','rallow'].forEach(id=>
  $(id).addEventListener('input',ringSize)
