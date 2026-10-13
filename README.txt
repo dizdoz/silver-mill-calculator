@@ -1,4 +1,4 @@
-SILVER MILL CALCULATOR — PWA
+METAL MATHS — PWA
 
 This is an installable Progressive Web App.
 
@@ -11,6 +11,6 @@ The app works offline after its first successful load.
 Included calculators:
 - Strip & Sheet: square stop size and sterling melt weight
 - Length from diameter
-- Length from UK/US ring size, including silver thickness and join/sizing allowance
+- Length from UK ring size, including silver thickness and join/sizing allowance
 
 No data is sent anywhere; calculations run on the device.
