@@ -1,10 +1,10 @@
 {
   "metal": "sterling_silver_925",
-  "market_price_gbp_per_gram": 0.925462,
+  "market_price_gbp_per_gram": 0.924538,
   "source": "Metals.Dev",
-  "source_timestamp": "2026-11-24T20:06:46.951539+00:00",
-  "published_at": "2026-11-24T20:06:46.951539+00:00",
-  "pulled_at": "2026-11-24T20:06:46.951539+00:00",
+  "source_timestamp": "2026-11-25T19:11:25.054618+00:00",
+  "published_at": "2026-11-25T19:11:25.054618+00:00",
+  "pulled_at": "2026-11-25T19:11:25.054618+00:00",
   "history": [
     {
       "timestamp": "2026-09-28T09:58:27.293819+00:00",
@@ -253,6 +253,10 @@
     {
       "timestamp": "2026-11-24T20:06:46.951539+00:00",
       "price_gbp_per_gram": 0.925462
+    },
+    {
+      "timestamp": "2026-11-25T19:11:25.054618+00:00",
+      "price_gbp_per_gram": 0.924538
     }
   ]
 }
